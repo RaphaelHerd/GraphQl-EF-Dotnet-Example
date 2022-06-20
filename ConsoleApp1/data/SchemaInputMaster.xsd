@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ Copyright 2021 Operaize GmbH, Cologne, Germany,
+~ Operaize data model
+~ Version: 0.10
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://operaize.com/in/master"
+           targetNamespace="http://operaize.com/in/master"
+           elementFormDefault="qualified">
+
+    <xs:element name="MasterData">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Locations" type="LocationsType"/>
+                <xs:element name="Materials" type="MaterialsType"/>
+                <xs:element name="Resources" type="ResourcesType"/>
+                <xs:element name="ResourceGroups" type="ResourceGroupsType"/>
+                <xs:element name="Storages" type="StoragesType"/>
+                <xs:element name="BillsOfMaterials" type="BillsOfMaterialsType"/>
+                <xs:element name="Routings" type="RoutingsType"/>
+                <xs:element name="BOMRoutingAlternatives" type="BOMRoutingAlternativesType"/>
+                <xs:element name="Calendars" type="CalendarsType"/>
+                <xs:element name="Shifts" type="ShiftsType"/>
+                <xs:element name="ChangeoverMatrices" type="ChangeoverMatricesType"/>
+            </xs:sequence>
+            <xs:attribute name="MasterID" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        ID of this master data, which must be referenced by the corresponding transactional data
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="TimeStamp" type="xs:dateTime" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="RequestType">
+        <xs:attribute name="RequestID" type="xs:string" use="required"/>
+        <xs:attribute name="RequestTimeStamp" type="xs:string" use="required"/>
+        <xs:attribute name="PlanningHorizonFrom" type="xs:dateTime" use="required"/>
+        <xs:attribute name="PlanningHorizonTo" type="xs:dateTime" use="required"/>
+        <xs:attribute name="TimeUnit" type="TimeUnitType" use="required"/>
+    </xs:complexType>
+
+    <!-- the states of this scenario: -->
+    <xs:simpleType name="StateType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unknown"/>
+            <xs:enumeration value="processing"/>
+            <xs:enumeration value="inconsistent"/>
+            <xs:enumeration value="erroneous"/>
+            <xs:enumeration value="submitted"/>
+            <xs:enumeration value="unknown"/>
+            <xs:enumeration value="deleted"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="partial"/>
+            <xs:enumeration value="tentative"/>
+            <xs:enumeration value="final"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <!-- the Time Unit of this scenario: -->
+    <xs:simpleType name="TimeUnitType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sec"/>
+            <xs:enumeration value="min"/>
+            <xs:enumeration value="h"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="LocationsType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of all locations
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Location" type="LocationType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LocationType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) Definition of the location
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="MaterialsType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of all available materials
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Material" type="MaterialType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MaterialType">
+        <xs:annotation>
+            <xs:documentation>
+                Defintion of a material consisting of it's ID and unit of measurement
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Storage" type="MaterialStorageType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+        <xs:attribute name="UOM" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="MaterialStorageType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the storage, that the corresponding material is stored in. CURRENT LIMITATION: only one
+                storage per material is allowed
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="Ref" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="StoragesType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of all available storages
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Storage" type="StorageType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="StorageType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) Definition of the storage
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="ResourcesType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of all available resources
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Resource" type="ResourceType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ResourceType">
+        <xs:annotation>
+            <xs:documentation>
+                Defintion of a resource consisting of it's ID, unit of measurement and location
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+        <xs:attribute name="UOM" type="xs:string" use="required"/>
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="ResourceGroupsType">
+        <xs:annotation>
+            <xs:documentation>
+                (Transactional data) List of all resource groups that operations can be assigned to. A resource group
+                can consist of a single resource (eg. Machine1) or multiple resources (eg.: Machine1, Labour1, Energy)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ResourceGroup" type="ResourceGroupType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ResourceGroupType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of a resource group. Here only the ID gets defined which is used for attachment of
+                operations. The child elements are the versions (alternatives) of the resource group
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Resource" type="ResourceGroupResType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="ResourceGroupResType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the resource belonging to the alternative of the resource group and the required amounts
+                (eg.: "RequiredAmount" = 10 if the resource group has ten units of a resource)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="Ref" type="xs:string" use="required"/>
+        <xs:attribute name="RequiredAmount" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="CalendarsType">
+        <xs:annotation>
+            <xs:documentation>
+                Horizon-agnostic definition of regular time availability patterns for resources
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Calendar" type="CalendarType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CalendarType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of the calendar pattern. The assignment of shifts is based on a weekly pattern.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Day" type="DayType" maxOccurs="7"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="DayType">
+        <xs:annotation>
+            <xs:documentation>
+                Availability pattern of the shift based on a 7 day pattern. Each day can have multiple shifts attached
+                to it.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Shift" type="ShiftRefType" maxOccurs="7"/>
+        </xs:sequence>
+        <xs:attribute name="Number" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="ShiftRefType">
+        <xs:attribute name="Ref" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="ShiftsType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of all availability shifts for resources.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Shift" type="ShiftType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ShiftType">
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+        <xs:attribute name="Start" type="xs:time" use="required"/>
+        <xs:attribute name="Duration" type="xs:float" use="required"/>
+        <xs:attribute name="TimeUnit" type="TimeUnitType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="BillsOfMaterialsType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of bills of materials
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Produced" type="BOMProducedType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BOMProducedType">
+        <xs:annotation>
+            <xs:documentation>
+                Bill of materials for the "to be produced" item. The "ID" attribute is the identifier for the bom. The
+                material reference points to the output material. "QuantityPer" defines the base quantity of the output
+                material for this bom
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BillOfMaterials" type="BOMType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="MaterialRef" type="xs:string" use="required"/>
+        <xs:attribute name="QuantityPer" type="xs:float" use="required"/>
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="BOMType">
+        <xs:annotation>
+            <xs:documentation>
+                Alternative (version of the) BOM for the given (Produced) output material
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Consumed" type="ConsumedType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="ConsumedType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the input material, it's consumption quantity and the operation from the routing which is
+                consuming it
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="MaterialRef" type="xs:string" use="required"/>
+        <xs:attribute name="QuantityPer" type="xs:float" use="required"/>
+        <xs:attribute name="OperationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="RoutingsType">
+        <xs:annotation>
+            <xs:documentation>
+                (Master data) List of routings.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Produced" type="RoutingProducedType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RoutingProducedType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of the routing (ID) and the output material of the routing
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Routing" type="RoutingType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="MaterialRef" type="xs:string" use="required"/>
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="RoutingType">
+        <xs:annotation>
+            <xs:documentation>
+                Alternative (version of the) routing for the corresponding output material (Produced)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Operation" type="OperationType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="OperationType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of the operation of the routing, assignment of the operation to the resource group it will
+                operate on. Information about predecessors/successors is optional, if those attributes are empty they
+                will be generated automatically based on the position of the operation inside the routing
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Resources" type="OperationResourcesType" minOccurs="1"/>
+            <xs:element name="Connections" type="ConnectionsType"/>
+            <xs:element name="Phases" type="PhasesType"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="OperationResourcesType">
+        <xs:annotation>
+            <xs:documentation>
+                List of all resource groups and their alternatives attached to this operation. Resource groups can also
+                be assigned to individual phases of this operation, thus overwriting THIS setting for the given phase
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ResourceGroup" type="OperationResGroupType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ConnectionsType">
+        <xs:annotation>
+            <xs:documentation>
+                List of all predecessors and successors of this operation
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Predecessor" type="ConnectionType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Successor" type="ConnectionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ConnectionType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the predecessor of this operation
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="OperationRef" type="xs:string" use="required"/>
+        <xs:attribute name="GluedConnection" type="xs:boolean" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    If "true" (currently only "true" supported): no gaps between this operation and the connecting
+                    operation. If "false" (CURRENTLY NOT SUPPORTED): gaps between this operation and the connecting
+                    operation are allowed. NOTE: values for this attribute must match between this operation and
+                    the connectiong operation
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="StartsWithPredecessorPhase" type="PredSuccPhaseType" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    If a valid value for "StartsWithPredecessorPhase" is given, this operation starts with the
+                    corresponding phase of the predecessing operation
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="PhasesType">
+        <xs:annotation>
+            <xs:documentation>
+                List of phases of the operation. The only possible values are: Queue, Setup, Processing, Teardown, Wait,
+                Movement
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Phase" type="PhaseType" minOccurs="1" maxOccurs="6"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PhaseType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of the phase of the operation. The only possible values for the name are: Queue, Setup,
+                Processing,
+                Teardown, Wait, Movement. The Movement phase does not occupy the specified resource group. The duration
+                can be given either as a) the total constant duration of the phase if specifying only "Duration" and
+                leaving "Linear" empty or b) dependant on the quantity of the output material. For b) the following
+                calculation for the total duration applies: total duration = "Duration" + "Linear"*output quantity
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Resources" type="PhaseResourcesType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="Name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Queue"/>
+                    <xs:enumeration value="Setup"/>
+                    <xs:enumeration value="Processing"/>
+                    <xs:enumeration value="Teardown"/>
+                    <xs:enumeration value="Wait"/>
+                    <xs:enumeration value="Movement"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="TimeUnit" type="TimeUnitType" use="required"/>
+        <xs:attribute name="Duration" type="xs:unsignedInt" use="required"/>
+        <xs:attribute name="Linear" type="xs:float" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="PhaseResourcesType">
+        <xs:annotation>
+            <xs:documentation>
+                (CURRENTLY NOT USED) List of all resource groups and their alternatives attached to this phase. This
+                setting will overwrite the resource groups defined on the operation. Assignment of resources to the
+                Movement phase is NOT allowed
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ResourceGroup" type="OperationResGroupType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OperationResGroupType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the resource group that is occupied at this operation/phase
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="Ref" type="xs:string" use="required"/>
+        <xs:attribute name="Priority" type="xs:positiveInteger" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    CURRENTLY ONLY PRIORITY=1 IS SUPPORTED
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="PredSuccPhaseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Queue"/>
+            <xs:enumeration value="Setup"/>
+            <xs:enumeration value="Processing"/>
+            <xs:enumeration value="Teardown"/>
+            <xs:enumeration value="Wait"/>
+            <xs:enumeration value="Movement"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="BOMRoutingAlternativesType">
+        <xs:annotation>
+            <xs:documentation>
+                Dictionary-like structure of allowed combinations of BOM's and routings (dictionary value) and their
+                assigned priorities (dictionary key) for each produced material
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Produced" type="BOMRoutingProducedType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BOMRoutingProducedType">
+        <xs:annotation>
+            <xs:documentation>
+                Reference to the output material produced in the routing - BOM combinations, which are listed as child
+                elements
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BOMRoutingAlternative" type="BOMRoutingAlternativeType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="MaterialRef" type="xs:string" use="required"/>
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="BOMRoutingAlternativeType">
+        <xs:annotation>
+            <xs:documentation>
+                Assignment of priorities to the BOM - routing combinations
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="Priority" type="xs:positiveInteger" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The priority of this BOM-routing combination. This priority can be referenced in the process orders
+                    - BOMRoutingPriority attribute and the according BOM and routing will be applied to the process
+                    order
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="BOMRef" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Reference to the BOM
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="RoutingRef" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Reference to the routing
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="ChangeoverMatricesType">
+        <xs:sequence>
+            <xs:element name="ChangeOverMatrix" type="ChangeOverMatrixType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- only for output materials of a work order and their operations: -->
+    <xs:complexType name="ChangeOverMatrixType">
+        <xs:attribute name="LocationRef" type="xs:string" use="required"/>
+        <xs:attribute name="ResourceRef" type="xs:string" use="required"/>
+
+        <!-- the referred ID of the material produced by any predecessor operation within a defined work order: -->
+        <xs:attribute name="MaterialFromRef" type="xs:string" use="required"/>
+        <!-- the referred ID of the material poduced by any successor operation within a defined work order: -->
+        <xs:attribute name="MaterialToRef" type="xs:string" use="required"/>
+        <!-- the change over duration which must be a multiple of the time unit, see make span: -->
+        <xs:attribute name="SetupTime" type="xs:double" use="required"/>
+        <xs:attribute name="TimeUnit" type="TimeUnitType" use="required"/>
+        <!-- the change over for a specific resource - not yet implemented: -->
+    </xs:complexType>
+
+
+</xs:schema>

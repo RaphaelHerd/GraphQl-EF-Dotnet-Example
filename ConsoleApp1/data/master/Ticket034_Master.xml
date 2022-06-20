@@ -1,0 +1,285 @@
+<MasterData MasterID="input-api-master-00008" TimeStamp="2021-08-30T05:08:46" xmlns="http://operaize.com/in/master">
+	<Locations>
+		<Location ID="Plant1"/>
+	</Locations>
+	<Materials>
+		<Material ID="FG1001" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="FG1002" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="FG1003" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1001" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1002" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1003" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1004" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1005" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1006" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="PK1007" UOM="EA">
+			<Storage Ref="ST_1"/>
+		</Material>
+		<Material ID="SFG1001" UOM="L">
+			<Storage Ref="ST_1"/>
+		</Material>
+	</Materials>
+	<Resources>
+		<Resource ID="Plant1_FT_1" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_BT_1" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_BT_2" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="PLant1_LB_1" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_PK_1" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_TL_1" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_TL_2" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_TL_3" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_TL_4" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_MP_2" LocationRef="Plant1" UOM="EA"/>
+		<Resource ID="Plant1_MP_3" LocationRef="Plant1" UOM="EA"/>
+	</Resources>
+	<ResourceGroups>
+		<ResourceGroup ID="Plant1_RG_BT_1">
+			<Resource Ref="Plant1_BT_1" RequiredAmount="1"/>
+			<Resource Ref="Plant1_TL_1" RequiredAmount="1"/>
+			<Resource Ref="Plant1_MP_2" RequiredAmount="1"/>
+		</ResourceGroup>
+		<ResourceGroup ID="Plant1_RG_BT_2">
+			<Resource Ref="Plant1_BT_2" RequiredAmount="1"/>
+			<Resource Ref="Plant1_TL_2" RequiredAmount="1"/>
+			<Resource Ref="Plant1_MP_2" RequiredAmount="1"/>
+		</ResourceGroup>
+		<ResourceGroup ID="Plant1_RG_LB_1">
+			<Resource Ref="PLant1_LB_1" RequiredAmount="1"/>
+			<Resource Ref="Plant1_TL_3" RequiredAmount="1"/>
+		</ResourceGroup>
+		<ResourceGroup ID="Plant1_RG_LB_2">
+			<Resource Ref="PLant1_LB_1" RequiredAmount="1"/>
+			<Resource Ref="Plant1_TL_4" RequiredAmount="1"/>
+		</ResourceGroup>
+		<ResourceGroup ID="Plant1_RG_PK_1">
+			<Resource Ref="Plant1_PK_1" RequiredAmount="1"/>
+			<Resource Ref="Plant1_MP_3" RequiredAmount="1"/>
+		</ResourceGroup>
+	</ResourceGroups>
+	<Storages>
+		<Storage ID="ST_1" LocationRef="Plant1"/>
+	</Storages>
+	<BillsOfMaterials>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001" QuantityPer="1">
+			<BillOfMaterials ID="BOM for Item_FG1001_at_Plant1_Alt_1">
+				<Consumed MaterialRef="PK1002" OperationRef="10" QuantityPer="1.0"/>
+				<Consumed MaterialRef="PK1005" OperationRef="20" QuantityPer="1.0"/>
+				<Consumed MaterialRef="SFG1001" OperationRef="10" QuantityPer="0.505"/>
+			</BillOfMaterials>
+		</Produced>
+	</BillsOfMaterials>
+	<Routings>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<Routing ID="Routing for Item_FG1001_At_Plant1_Ver_1">
+				<Operation ID="10">
+					<Resources>
+						<ResourceGroup Priority="1" Ref="Plant1_RG_BT_1"/>
+					</Resources>
+					<Connections/>
+					<Phases>
+						<Phase Duration="78.0" Name="Setup" TimeUnit="min"/>
+						<Phase Duration="0.0" Linear="0.02" Name="Processing" TimeUnit="min"/>
+						<Phase Duration="100.0" Name="Teardown" TimeUnit="min"/>
+						<Phase Duration="0.0" Name="Movement" TimeUnit="min"/>
+					</Phases>
+				</Operation>
+			</Routing>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<Routing ID="Routing for Item_FG1001_At_Plant1_Ver_2">
+				<Operation ID="10">
+					<Resources>
+						<ResourceGroup Priority="1" Ref="Plant1_RG_BT_1"/>
+					</Resources>
+					<Connections/>
+					<Phases>
+						<Phase Duration="78.0" Name="Setup" TimeUnit="min"/>
+						<Phase Duration="0.0" Linear="0.06" Name="Processing" TimeUnit="min"/>
+						<Phase Duration="100.0" Name="Teardown" TimeUnit="min"/>
+						<Phase Duration="0.0" Name="Movement" TimeUnit="min"/>
+					</Phases>
+				</Operation>
+			</Routing>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<Routing ID="Routing for Item_FG1001_At_Plant1_Ver_3">
+				<Operation ID="10">
+					<Resources>
+						<ResourceGroup Priority="1" Ref="Plant1_RG_BT_1"/>
+					</Resources>
+					<Connections/>
+					<Phases>
+						<Phase Duration="78.0" Name="Setup" TimeUnit="min"/>
+						<Phase Duration="0.0" Linear="0.06" Name="Processing" TimeUnit="min"/>
+						<Phase Duration="100.0" Name="Teardown" TimeUnit="min"/>
+						<Phase Duration="0.0" Name="Movement" TimeUnit="min"/>
+					</Phases>
+				</Operation>
+			</Routing>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<Routing ID="Routing for Item_FG1001_At_Plant1_Ver_4">
+				<Operation ID="10">
+					<Resources>
+						<ResourceGroup Priority="1" Ref="Plant1_RG_BT_1"/>
+					</Resources>
+					<Connections/>
+					<Phases>
+						<Phase Duration="78.0" Name="Setup" TimeUnit="min"/>
+						<Phase Duration="0.0" Linear="0.06" Name="Processing" TimeUnit="min"/>
+						<Phase Duration="100.0" Name="Teardown" TimeUnit="min"/>
+						<Phase Duration="0.0" Name="Movement" TimeUnit="min"/>
+					</Phases>
+				</Operation>
+			</Routing>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<Routing ID="Routing for Item_FG1001_At_Plant1_Ver_5">
+				<Operation ID="10">
+					<Resources>
+						<ResourceGroup Priority="1" Ref="Plant1_RG_BT_1"/>
+					</Resources>
+					<Connections/>
+					<Phases>
+						<Phase Duration="78.0" Name="Setup" TimeUnit="min"/>
+						<Phase Duration="0.0" Linear="0.06" Name="Processing" TimeUnit="min"/>
+						<Phase Duration="100.0" Name="Teardown" TimeUnit="min"/>
+						<Phase Duration="0.0" Name="Movement" TimeUnit="min"/>
+					</Phases>
+				</Operation>
+			</Routing>
+		</Produced>
+
+	</Routings>
+	<BOMRoutingAlternatives>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<BOMRoutingAlternative BOMRef="BOM for Item_FG1001_at_Plant1_Alt_1" Priority="1" RoutingRef="Routing for Item_FG1001_At_Plant1_Ver_1"/>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<BOMRoutingAlternative BOMRef="BOM for Item_FG1001_at_Plant1_Alt_1" Priority="1" RoutingRef="Routing for Item_FG1001_At_Plant1_Ver_2"/>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<BOMRoutingAlternative BOMRef="BOM for Item_FG1001_at_Plant1_Alt_1" Priority="1" RoutingRef="Routing for Item_FG1001_At_Plant1_Ver_3"/>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<BOMRoutingAlternative BOMRef="BOM for Item_FG1001_at_Plant1_Alt_1" Priority="1" RoutingRef="Routing for Item_FG1001_At_Plant1_Ver_4"/>
+		</Produced>
+		<Produced LocationRef="Plant1" MaterialRef="FG1001">
+			<BOMRoutingAlternative BOMRef="BOM for Item_FG1001_at_Plant1_Alt_1" Priority="1" RoutingRef="Routing for Item_FG1001_At_Plant1_Ver_5"/>
+		</Produced>
+	</BOMRoutingAlternatives>
+	<Calendars>
+		<Calendar ID="Plant1_2Shift_Week Days">
+			<Day Number="1">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+			<Day Number="2">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+			<Day Number="3">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+			<Day Number="4">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+			<Day Number="5">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+		</Calendar>
+		<Calendar ID="Plant1_3Shift_All Days">
+			<Day Number="1">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="2">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="3">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="4">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="5">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="6">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="7">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+		</Calendar>
+		<Calendar ID="Plant1_3Shift_Week Days">
+			<Day Number="1">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="2">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="3">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="4">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+				<Shift Ref="Plant1_Shift 3"/>
+			</Day>
+			<Day Number="5">
+				<Shift Ref="Plant1_Shift 1"/>
+				<Shift Ref="Plant1_Shift 2"/>
+			</Day>
+		</Calendar>
+	</Calendars>
+	<Shifts>
+		<Shift Duration="8.0" ID="Plant1_Shift 1" Start="06:00:00" TimeUnit="h"/>
+		<Shift Duration="8.0" ID="Plant1_Shift 2" Start="14:00:00" TimeUnit="h"/>
+		<Shift Duration="8.0" ID="Plant1_Shift 3" Start="22:00:00" TimeUnit="h"/>
+	</Shifts>
+	<ChangeoverMatrices>
+		<ChangeOverMatrix LocationRef="Plant1" MaterialFromRef="SFG1003" MaterialToRef="SFG1003" ResourceRef="Plant1_FT_1" SetupTime="60.0" TimeUnit="min"/>
+		<ChangeOverMatrix LocationRef="Plant1" MaterialFromRef="SFG1003" MaterialToRef="SFG1004" ResourceRef="Plant1_FT_1" SetupTime="120.0" TimeUnit="min"/>
+	</ChangeoverMatrices>
+</MasterData>

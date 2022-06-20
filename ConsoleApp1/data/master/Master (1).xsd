@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://operaize.com/in/master" elementFormDefault="qualified" xmlns="http://operaize.com/in/master" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="MasterData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Locations">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Location">
+								<xs:complexType>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Materials">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Material" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Storage">
+											<xs:complexType>
+												<xs:attribute name="Ref" use="required" type="xs:string"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+									<xs:attribute name="UOM" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Resources">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Resource" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+									<xs:attribute name="UOM" use="required" type="xs:string"/>
+									<xs:attribute name="LocationRef" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ResourceGroups">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ResourceGroup" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Resource">
+											<xs:complexType>
+												<xs:attribute name="Ref" use="required" type="xs:string"/>
+												<xs:attribute name="RequiredAmount" use="required" type="xs:byte"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Storages">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Storage">
+								<xs:complexType>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+									<xs:attribute name="LocationRef" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="BillsOfMaterials">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Produced" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="BillOfMaterials">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Consumed">
+														<xs:complexType>
+															<xs:attribute name="MaterialRef" use="required" type="xs:string"/>
+															<xs:attribute name="QuantityPer" use="required" type="xs:decimal"/>
+															<xs:attribute name="OperationRef" use="required" type="xs:byte"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="ID" use="required" type="xs:string"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="MaterialRef" use="required" type="xs:string"/>
+									<xs:attribute name="QuantityPer" use="required" type="xs:decimal"/>
+									<xs:attribute name="LocationRef" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Routings">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Produced" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Routing">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Operation" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Resources">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="ResourceGroup">
+																				<xs:complexType>
+																					<xs:attribute name="Ref" use="required" type="xs:string"/>
+																					<xs:attribute name="Priority" use="required" type="xs:byte"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Connections">
+																	<xs:complexType>
+																		<xs:choice minOccurs="0">
+																			<xs:element name="Predecessor">
+																				<xs:complexType>
+																					<xs:attribute name="OperationRef" use="required" type="xs:byte"/>
+																					<xs:attribute name="GluedConnection" use="required" type="xs:boolean"/>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element name="Successor">
+																				<xs:complexType>
+																					<xs:attribute name="OperationRef" use="required" type="xs:byte"/>
+																					<xs:attribute name="GluedConnection" use="required" type="xs:boolean"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:choice>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Phases">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Phase" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:attribute name="Name" use="required" type="xs:string"/>
+																					<xs:attribute name="TimeUnit" use="required" type="xs:string"/>
+																					<xs:attribute name="Duration" use="required" type="xs:byte"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="ID" use="required" type="xs:byte"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="ID" use="required" type="xs:string"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="MaterialRef" use="required" type="xs:string"/>
+									<xs:attribute name="LocationRef" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="BOMRoutingAlternatives">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Produced" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="BOMRoutingAlternative">
+											<xs:complexType>
+												<xs:attribute name="Priority" use="required" type="xs:byte"/>
+												<xs:attribute name="BOMRef" use="required" type="xs:string"/>
+												<xs:attribute name="RoutingRef" use="required" type="xs:string"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="MaterialRef" use="required" type="xs:string"/>
+									<xs:attribute name="LocationRef" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Calendars">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Calendar">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Day" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Shift" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:attribute name="Ref" use="required" type="xs:string"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="Number" use="required" type="xs:byte"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Shifts">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Shift" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="ID" use="required" type="xs:string"/>
+									<xs:attribute name="Start" use="required" type="xs:time"/>
+									<xs:attribute name="Duration" use="required" type="xs:byte"/>
+									<xs:attribute name="TimeUnit" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ChangeoverMatrices">
+					<xs:complexType>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="MasterID" use="required" type="xs:string"/>
+			<xs:attribute name="TimeStamp" use="required" type="xs:dateTime"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

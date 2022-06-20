@@ -1,0 +1,166 @@
+<MasterData xmlns="http://operaize.com/in/master" MasterID="solver-TC8" TimeStamp="2020-10-22T14:00:00">
+
+    <Locations>
+        <Location ID="Plant"/>
+    </Locations>
+    
+    <Materials>
+        <Material ID="FG" UOM="EA">
+            <Storage Ref="Storage1"/>
+        </Material>
+        <Material ID="SFG" UOM="EA">
+            <Storage Ref="Storage1"/>
+        </Material>
+        <Material ID="RM" UOM="EA">
+            <Storage Ref="Storage1"/>
+        </Material>
+    </Materials>
+    
+    <Resources>
+        <Resource ID="MachineA" UOM="EA" LocationRef="Plant"/>
+        <Resource ID="MachineB" UOM="EA" LocationRef="Plant"/>
+    </Resources>
+
+    <ResourceGroups>
+        <ResourceGroup ID="CategoryA">
+            <Resource Ref="MachineA" RequiredAmount="1"/>
+        </ResourceGroup>
+        <ResourceGroup ID="CategoryB">
+            <Resource Ref="MachineB" RequiredAmount="1"/>
+        </ResourceGroup>
+    </ResourceGroups>
+
+    <Storages>
+        <Storage ID="Storage1" LocationRef="Plant"/>
+    </Storages>
+
+
+
+    <BillsOfMaterials>
+        <Produced MaterialRef="FG" QuantityPer="1" LocationRef="Plant">
+            <BillOfMaterials ID="BOMFG">
+                <Consumed MaterialRef="SFG" QuantityPer="2" OperationRef="10"/>
+            </BillOfMaterials>
+        </Produced>
+        <Produced MaterialRef="SFG" QuantityPer="1.0" LocationRef="Plant">
+            <BillOfMaterials ID="BOMSFG">
+                <Consumed MaterialRef="RM" QuantityPer="1.5" OperationRef="11"/>
+            </BillOfMaterials>
+        </Produced>
+    </BillsOfMaterials>
+
+    <Routings>
+        <Produced MaterialRef="FG" LocationRef="Plant">
+            <Routing ID="RoutingFG">
+                <Operation ID="10">
+                    <Resources>
+                        <ResourceGroup Ref="CategoryB" Priority="1"/>
+                    </Resources>
+                    <Connections>
+                        <Successor OperationRef="20" GluedConnection="true"/>
+                    </Connections>
+                    <Phases>
+                        <Phase Name="Setup" TimeUnit="min" Duration="5"/>
+                        <Phase Name="Processing" TimeUnit="h" Duration="2"/>
+                        <Phase Name="Teardown" TimeUnit="min" Duration="15"/>
+                        <Phase Name="Movement" TimeUnit="min" Duration="30"/>
+                    </Phases>
+                </Operation>
+                <Operation ID="20">
+                    <Resources>
+                        <ResourceGroup Ref="CategoryB" Priority="1"/>
+                    </Resources>
+                    <Connections>
+                        <Predecessor OperationRef="10" GluedConnection="true"/>
+                    </Connections>
+                    <Phases>
+                        <Phase Name="Setup" TimeUnit="min" Duration="5"/>
+                        <Phase Name="Processing" TimeUnit="h" Duration="3"/>
+                        <Phase Name="Teardown" TimeUnit="min" Duration="15"/>
+                        <Phase Name="Movement" TimeUnit="min" Duration="0"/>
+                    </Phases>
+                </Operation>
+            </Routing>
+        </Produced>
+        <Produced MaterialRef="SFG" LocationRef="Plant">
+            <Routing ID="RoutingSFG">
+                <Operation ID="11">
+                    <Resources>
+                        <ResourceGroup Ref="CategoryA" Priority="1"/>
+                    </Resources>
+                    <Connections/>
+                    <Phases>
+                        <Phase Name="Setup" TimeUnit="min" Duration="5"/>
+                        <Phase Name="Processing" TimeUnit="h" Duration="2"/>
+                        <Phase Name="Teardown" TimeUnit="min" Duration="15"/>
+                        <Phase Name="Movement" TimeUnit="min" Duration="30"/>
+                    </Phases>
+                </Operation>
+            </Routing>
+        </Produced>
+    </Routings>
+
+    <BOMRoutingAlternatives>
+        <Produced MaterialRef="FG" LocationRef="Plant">
+            <BOMRoutingAlternative Priority="1" BOMRef="BOMFG" RoutingRef="RoutingFG"/>
+        </Produced>
+        <Produced MaterialRef="SFG" LocationRef="Plant">
+            <BOMRoutingAlternative Priority="1" BOMRef="BOMSFG" RoutingRef="RoutingSFG"/>
+        </Produced>
+    </BOMRoutingAlternatives>
+
+
+
+
+
+    <Calendars>
+        <Calendar ID="Alldays24-7">
+            <Day Number="1">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="2">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="3">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="4">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="5">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="6">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+            <Day Number="7">
+                <Shift Ref="Morning"/>
+                <Shift Ref="Day"/>
+                <Shift Ref="Night"/>
+            </Day>
+        </Calendar>
+    </Calendars>
+
+
+
+    <Shifts>
+        <Shift ID="Morning" Start="06:00:00" Duration="8" TimeUnit="h"/>
+        <Shift ID="Day" Start="14:00:00" Duration="8" TimeUnit="h"/>
+        <Shift ID="Night" Start="22:00:00" Duration="8" TimeUnit="h"/>
+    </Shifts>
+
+    <ChangeoverMatrices/>
+    
+</MasterData>
