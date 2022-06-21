@@ -1,6 +1,7 @@
 ﻿using System;
-using GraphQL;
-using GraphQL.Types;
+using System.IO;
+using System.Xml.Serialization;
+using GraphQl.Common;
 
 namespace ConsoleApp1
 {
@@ -8,21 +9,17 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Schema schema = Schema.For(@"
-                  type Query {
-                      hello: String
-                  }
-                  ");
-
-            var root = new { Hello = "Hello World!" };
-            var json = schema.Execute(_ =>
+            try
             {
-                _.Query = "{ hello }";
-                _.Root = root;
-            });
-
-            Console.WriteLine(json);
+                TextReader reader = new StreamReader(@"D:\git\GraphQl-EF-Dotnet-Example\GraphQl.Common\SchemaData\master\Master (1).xml");
+                XmlSerializer serializer = new XmlSerializer(typeof(MasterData));
+                MasterData masterdata = serializer.Deserialize(reader) as MasterData;
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
